@@ -1,0 +1,30 @@
+image:
+  file: .ybdb.Dockerfile
+tasks:
+  - name: ybdb
+    command: |
+      mkdir -p ${GITPOD_REPO_ROOT}/ybdb
+      yugabyted start --base_dir=${GITPOD_REPO_ROOT}/ybdb --advertise_address=$HOST --background=true
+
+  - name: init-services
+    init: |
+      docker compose -f voyager/compose.yml pull
+    command: |
+      docker compose -f voyager/compose.yml up
+
+  - name: mysql
+    init: |
+      sudo apt-get update
+      sudo apt-get install -y mysql-client
+    command: |
+      gp ports await 3306
+      echo 'password' | mysql -h 127.0.0.1 -P 3306 -u root -p
+
+  - name: yb-voyager
+    command: |
+      mkdir -p ${GITPOD_REPO_ROOT}/yb-voyager
+      wget -O ./yb-voyager https://raw.githubusercontent.com/yugabyte/yb-voyager/main/docker/yb-voyager-docker && chmod +x ./yb-voyager && sudo mv yb-voyager /usr/local/bin/yb-voyager
+
+vscode:
+  extensions:
+    - ms-azuretools.vscode-docker
