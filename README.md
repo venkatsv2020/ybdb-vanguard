@@ -9,9 +9,9 @@
 ```
 yb-voyager export schema --export-dir ${GITPOD_REPO_ROOT}/voyager-data \
         --source-db-type mysql \
-        --source-db-host 127.0.0.1 \
+        --source-db-host ${INSTANCE} \
         --source-db-user root \
-        --source-db-password 'password' \
+        --source-db-password ${SECRET} \
         --source-db-name Chinook
 ```
 
@@ -25,9 +25,9 @@ yb-voyager analyze-schema --export-dir ${GITPOD_REPO_ROOT}/voyager-data --output
 ```
 yb-voyager export data --export-dir ${GITPOD_REPO_ROOT}/voyager-data \
         --source-db-type mysql \
-        --source-db-host 127.0.0.1 \
+        --source-db-host ${INSTANCE} \
         --source-db-user root \
-        --source-db-password 'password' \
+        --source-db-password ${SECRET} \
         --source-db-name Chinook
 ```
 
@@ -36,7 +36,7 @@ yb-voyager export data --export-dir ${GITPOD_REPO_ROOT}/voyager-data \
 #### Step 4: Import Schema
 ```
 yb-voyager import schema --export-dir ${GITPOD_REPO_ROOT}/voyager-data \
-        --target-db-host 127.0.0.1 \
+        --target-db-host ${INSTANCE} \
         --target-db-user yugabyte \
         --target-db-password yugabyte \
         --target-db-name yugabyte \
@@ -46,7 +46,7 @@ yb-voyager import schema --export-dir ${GITPOD_REPO_ROOT}/voyager-data \
 #### Step 5: Import Data
 ```
 yb-voyager import data --export-dir ${GITPOD_REPO_ROOT}/voyager-data \
-        --target-db-host 127.0.0.1 \
+        --target-db-host ${INSTANCE} \
         --target-db-user yugabyte \
         --target-db-password yugabyte \
         --target-db-name yugabyte \
@@ -56,7 +56,7 @@ yb-voyager import data --export-dir ${GITPOD_REPO_ROOT}/voyager-data \
 #### Step 6: Import indexes and triggers
 ```
 yb-voyager import schema --export-dir ${GITPOD_REPO_ROOT}/voyager-data \
-        --target-db-host 127.0.0.1 \
+        --target-db-host ${INSTANCE} \
         --target-db-user yugabyte \
         --target-db-password yugabyte \
         --target-db-name yugabyte \
