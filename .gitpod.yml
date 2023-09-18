@@ -13,16 +13,19 @@ tasks:
       docker compose -f init-voyager/compose.yml up
 
   - name: mysql
+    env:
+      SECRET: 'Alwaysb3kind'
+      INSTANCE: 127.0.0.1
     init: |
       sudo apt-get update
       sudo apt-get install -y mysql-client
     command: |
       gp ports await 3306
-      mysql -h 127.0.0.1 -P 3306 -u root -p'Alwaysb3kind'
+      mysql -h ${127.0.0.1} -P 3306 -u root -p${Alwaysb3kind}
 
   - name: yb-voyager
     env:
-      SECRET: Alwaysb3kind
+      SECRET: 'Alwaysb3kind'
       INSTANCE: 127.0.0.1
     command: |
       mkdir -p ${GITPOD_REPO_ROOT}/voyager-data

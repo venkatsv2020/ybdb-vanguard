@@ -5,6 +5,13 @@
 
 ### Export schema and data from the source database
 
+#### Step 0: Load data
+Run the following from `mysql` shell
+```
+source init-voyager/chinook.sql
+```
+
+Run Step 1 to Step 7 from `yb-voyager` shell
 #### Step 1: Export Schema
 ```
 yb-voyager export schema --export-dir ${GITPOD_REPO_ROOT}/voyager-data \
