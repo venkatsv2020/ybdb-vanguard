@@ -1,6 +1,6 @@
 version: '3.9'
 x-mysql-config: &mysql-env
-  MYSQL_ROOT_PASSWORD: password
+  MYSQL_ROOT_PASSWORD: 'Alwaysb3kind'
   # MYSQL_USER: ybvoyager
   # MYSQL_PASSWORD: password
   MYSQL_INIT_COMMAND: "--skip-grant-tables"
@@ -11,13 +11,13 @@ services:
     restart: always
     network_mode: host
     environment:
-      <<: *kong-env
+      <<: *mysql-env
     ports:
       - '3306:3306'
     volumes:
       - mysql-data:/var/lib/mysql
   voyager:
-    image: yugabytedb/yb-voyager:1.5.1
+    image: yugabytedb/yb-voyager:latest
     restart: always
     network_mode: host
 volumes:
