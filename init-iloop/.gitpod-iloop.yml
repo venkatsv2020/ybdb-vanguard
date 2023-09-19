@@ -9,11 +9,13 @@ tasks:
       yugabyted start --base_dir=${GITPOD_REPO_ROOT}/${DATA_PATH} --advertise_address=$HOST --background=true
 
   - name: dev-inner-loop
+    env:
+      APP_ID: ybdbapp
     init: |
       npm install -g generator-jhipster-yugabytedb
     command: |
-      echo "ybdb dev inner loop workflow!"
-
+      mkdir -p ${GITPOD_REPO_ROOT}/${APP_ID} && cd ${GITPOD_REPO_ROOT}/${APP_ID}
+      echo "Run `ybdb` to get started!"
 
 vscode:
   extensions:
