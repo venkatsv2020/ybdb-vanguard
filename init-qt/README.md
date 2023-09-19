@@ -113,4 +113,3 @@ INNER JOIN Artist ar ON a.ArtistId = ar.ArtistId
 WHERE p.PlaylistId = 3;
 
 ```
-
