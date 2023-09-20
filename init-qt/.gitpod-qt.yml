@@ -18,7 +18,7 @@ tasks:
     init: |
       gp sync-await ybdb
       gp ports await 5433 && sleep 2
-      ysqlsh -f ${GITPOD_REPO_ROOT}/${DATA_PATH}/chinook.sql
+      ysqlsh -f ${GITPOD_REPO_ROOT}/${DATA_PATH}/chinook.sql -f ${GITPOD_REPO_ROOT}/${DATA_PATH}/sample.sql
     command: |
       gp ports await 5433 && sleep 2
       ysqlsh
