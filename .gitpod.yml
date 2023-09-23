@@ -3,8 +3,9 @@ image:
 tasks:
   - name: init-kafka
     env:
-      CONFLUENT_HOME: $(echo ${GITPOD_REPO_ROOT}/kafka/)
       KAFKA_VERSION: 7.5.0
+    before:
+      export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/kafka/
     init: |
       mkdir -p ${GITPOD_REPO_ROOT}/kafka/
       curl -O https://packages.confluent.io/archive/7.5/confluent-${KAFKA_VERSION}.tar.gz
@@ -14,7 +15,6 @@ tasks:
       gp sync-done init-kafka
   - name: init-connect-hub
     env:
-      CONFLUENT_HOME: $(echo ${GITPOD_REPO_ROOT}/kafka/)
       JDBC_VERSION: 10.7.4
       POSTGRES_VERSION: 2.2.1
     command: |
@@ -24,14 +24,10 @@ tasks:
       curl -o ${CONFLUENT_HOME}/share/confluent-hub-components/kafka-connect-jdbc/lib/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar https://github.com/yugabyte/debezium-connector-yugabytedb/releases/download/v1.9.5.y.33.SNAPSHOT/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar
       gp sync-done init-connect-hub
   - name: kafka-run
-    env:
-      CONFLUENT_HOME: $(echo ${GITPOD_REPO_ROOT}/kafka/)
     command: |
       gp sync-await init-connect-hub
       confluent local services start
   - name: connector-config
-    env:
-      CONFLUENT_HOME: $(echo ${GITPOD_REPO_ROOT}/kafka/)
     command: |
       echo "Apply connector config in this shell!"
   - name: init-postgres
