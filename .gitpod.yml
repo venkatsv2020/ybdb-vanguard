@@ -75,6 +75,7 @@ tasks:
       NODE: 127.0.0.1
       MASTERS: 127.0.0.1:7100
       TOPIC_PREFIX: sample
+      SCHEMA: public
     before: |
       export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/confluent
     command: |
