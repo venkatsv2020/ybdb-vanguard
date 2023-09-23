@@ -40,12 +40,22 @@ tasks:
       gp sync-done kafka-run
   - name: init-postgres
     env:
-      PG_VERSION: 13.3
       DATA_PATH: init-cdc
     init: |
       docker compose -f ${DATA_PATH}/compose.yml pull
     command: |
       docker compose -f ${DATA_PATH}/compose.yml up
+  - name: psqlsh
+    env:
+      SRC_USER: postgres
+      SRC_SECRET: 'Alwaysb3kind'
+      INSTANCE: 127.0.0.1
+    init: |
+      sudo apt-get update
+      sudo apt-get install -y postgresql-contrib
+    command: |
+      gp ports await 5432
+      psql -h ${INSTANCE} -u ${SRC_USER} -p${SRC_SECRET}
   - name: ysqlsh
     env:
       DATA_PATH: init-cdc
@@ -118,4 +128,7 @@ ports:
     onOpen: ignore
   - port: 9021
     name: control-center
+    onOpen: ignore
+  - port: 5432
+    name: postgres
     onOpen: ignore
