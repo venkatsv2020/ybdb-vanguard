@@ -1,6 +1,12 @@
 image:
   file: .ybdb.Dockerfile
 tasks:
+  - name: ybdb
+    env:
+      DATA_PATH: ybdb
+    command: |
+      mkdir -p ${GITPOD_REPO_ROOT}/${DATA_PATH}
+      yugabyted start --base_dir=${GITPOD_REPO_ROOT}/${DATA_PATH} --advertise_address=$HOST --background=true
   - name: init-kafka
     env:
       KAFKA_VERSION: 7.5.0
@@ -31,11 +37,6 @@ tasks:
     command: |
       gp sync-await init-connect-hub
       ${CONFLUENT_HOME}/bin/confluent local services start
-  - name: connector-config
-    before:
-      export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/kafka
-    command: |
-      echo "Apply connector config in this shell!"
   - name: init-postgres
     env:
       PG_VERSION: 13.3
@@ -44,16 +45,20 @@ tasks:
       docker compose -f ${DATA_PATH/compose.yml pull
     command: |
       docker compose -f ${DATA_PATH/compose.yml up
-
   - name: ysqlsh
     env:
       DATA_PATH: init-cdc
-    init: |
+    before: |
       gp ports await 5433 && sleep 2
       ysqlsh -f ${GITPOD_REPO_ROOT}/${DATA_PATH}/chinook.sql
     command: |
       gp ports await 5433 && sleep 2
       ysqlsh
+  - name: connector-config
+    before:
+      export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/kafka
+    command: |
+      echo "Apply connector config in this shell!"
 
 vscode:
   extensions:
