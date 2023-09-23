@@ -66,6 +66,12 @@ tasks:
       gp ports await 5433 && sleep 2
       ysqlsh
   - name: connector-config
+    env:
+      SRC_USER: yugabyte
+      SRC_SECRET: yugabyte
+      TAR_USER: postgres
+      TAR_SECRET: 'Alwaysb3kind'
+      INSTANCE: 127.0.0.1
     before:
       export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/kafka
     command: |

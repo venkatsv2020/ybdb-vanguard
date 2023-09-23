@@ -1,62 +1,68 @@
 ## ybdb explore the distributed sql universe
 
-Run the following from `ysqlsh` shell
+Run the following from `connector-config` shell
 
-### Xperience the power of YSQL
+### create cdc stream at the source
 
 ```
-create table sample(k int primary key, v int, t text, f float, d date, ts timestamp, tsz timestamptz, u uuid, j jsonb);
-
-\d+ sample;
-
-insert into sample values(1, 1, 'one', 1.1, '2020-01-01', '2020-01-01 01:01:01', true, '2020-01-01 01:01:01', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', '{"a": 1}');
-
-create index on sample(v);
-
-\d+ sample;
-
-create table sample_01(k int primary key, v int, t text, f float, d date, ts timestamp, tsz timestamptz, u uuid, j jsonb) split into 4 tablets;
-
-create index on sample_01(v) split into 4 tablets;
-
-\d+ sample_01;
-
-create table sample_02(k int, v int, t text, f float, d date, ts timestamp, b bool, tsz timestamptz, u uuid, j jsonb, primary key(k, v asc));
-
-\d+ sample_02;
-
-create table sample_03(k int, v int, t text, f float, d date, ts timestamp, b bool, tsz timestamptz, u uuid, j jsonb, primary key((k, v) HASH, t desc));
-
-\d+ sample_03;
+yb-admin -master_addresses 127.0.0.2:7100 create_cdc_stream ysql.yugabyte
 
 ```
 
-### Xperience the power of YCQL
+### create ybdb source connector
 
 ```
-create keyspace demo;
+curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d '{
+  "name": "ybsource",
+  "config": {
+    "tasks.max":"1",
+    "connector.class": "io.debezium.connector.yugabytedb.YugabyteDBConnector",
+    "topics_regex": "${TOPIC_PREFIX}.public.(.*)",
+    "database.hostname":"'$NODE'",
+    "database.master.addresses":"'$MASTERS'",
+    "database.port":"5433",
+    "database.user": "yugabyte",
+    "database.password":"yugabyte",
+    "database.dbname":"yugabyte",
+    "database.server.name":"ybsource",
+    "snapshot.mode":"initial",
+    "database.streamid":"'$STREAM_ID'",
+    "table.include.list":"public.*",
+    "new.table.poll.interval.ms":"5000",
+    "transforms":"Reroute",
+    "transforms.Reroute.type":"io.debezium.transforms.ByLogicalTableRouter",
+    "transforms.Reroute.topic.regex":"(.*)",
+    "transforms.Reroute.topic.replacement":"'${TOPIC_PREFIX}'_all_events",
+    "transforms.Reroute.key.field.regex":"ybsource.public.(.*)",
+    "transforms.Reroute.key.field.replacement":"'\$1'"
+  }
+}'
 
-use demo;
+```
 
-create table sample(k int primary key, v int, t text, f float, d date, ts timestamp, tsz timestamp, u uuid, j jsonb);
-
-desc sample;
-
-insert into sample(k, v, t, f, d, ts, tsz, u, j) values(1, 1, 'one', 1.1, '2020-01-01', '2020-01-01 01:01:01', '2020-01-01 01:01:01', a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11, '{"a": 1}');
-
-# will fail
-create index on sample(v);
-
-create table sample_01(k int, v int, t text, f float, d date, ts timestamp, tsz timestamp, u uuid, j jsonb, primary key(k, v)) with transactions = { 'enabled' : true };
-
-create index on sample_01(v);
-
-desc sample_01;
-
-create table sample_02(k int, v int, t text, f float, d date, ts timestamp, b boolean, tsz timestamp, u uuid, j jsonb, primary key(k, v)) with transactions = { 'enabled' : true } and tablets = 4;
-
-create index on sample_02(v) with transactions = { 'enabled' : true } and tablets = 4;
-
-desc sample_02;
-
+### create postgres sink connector
+```
+curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d '{
+  "name": "pgsink",
+  "config": {
+      "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+      "tasks.max": "1",
+      "topics": "'${TOPIC_PREFIX}'_all_events",
+      "dialect.name": "PostgreSqlDatabaseDialect",
+      "connection.url": "jdbc:postgresql://localhost:5432/postgres?user=postgres&password=Alwaysb3kind",
+      "auto.create": "true",
+      "auto.evolve":"true",
+      "insert.mode": "upsert",
+      "pk.mode": "record_key",
+      "delete.enabled":"true",
+      "transforms": "KeyFieldExample,ReplaceField,unwrap",
+      "transforms.KeyFieldExample.type": "'io.aiven.kafka.connect.transforms.ExtractTopic\$Key'",
+      "transforms.KeyFieldExample.field.name": "__dbz__physicalTableIdentifier",
+      "transforms.KeyFieldExample.skip.missing.or.null": "true",
+      "transforms.ReplaceField.type": "'org.apache.kafka.connect.transforms.ReplaceField\$Key'",
+      "transforms.ReplaceField.blacklist": "__dbz__physicalTableIdentifier",
+      "transforms.unwrap.type": "io.debezium.connector.yugabytedb.transforms.YBExtractNewRecordState",
+      "transforms.unwrap.drop.tombstones": "false"
+   }
+}'
 ```
