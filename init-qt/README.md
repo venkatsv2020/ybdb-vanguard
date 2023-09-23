@@ -1,5 +1,3 @@
-# ybdb-vanguard-enablement
-
 ## query tuning tips and tricks
 
 ### explain plan

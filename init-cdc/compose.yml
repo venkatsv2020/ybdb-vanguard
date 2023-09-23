@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  postgresql:
+    container_name: postgres
+    image: docker.io/bitnami/postgresql:${PG_VERSION}
+    restart: always
+    network_mode: host
+    ports:
+      - 5432:5432
+    volumes:
+      - postgresql_data:/bitnami/postgresql
+    environment:
+      POSTGRESQL_USERNAME: kong
+      POSTGRESQL_PASSWORD: 'Alwaysb3kind'
+      POSTGRESQL_DATABASE: kong
+volumes:
+  postgresql_data:

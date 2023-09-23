@@ -1,6 +1,4 @@
-# ybdb-vanguard-enablement
-
-## yb-voyager migration tool :: MYSQL to YUGABYTEDB
+## yb-voyager migration tool :: mysql to yugabytedb
 
 ### Export schema and data from the source database
 
