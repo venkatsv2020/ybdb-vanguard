@@ -70,7 +70,9 @@ tasks:
       SRC_SECRET: yugabyte
       TAR_USER: postgres
       TAR_SECRET: 'Alwaysb3kind'
-      INSTANCE: 127.0.0.1
+      NODE: 127.0.0.1
+      MASTERS: 127.0.0.1:7100
+      TOPIC_PREFIX: sample
     before:
       export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/kafka
     command: |
