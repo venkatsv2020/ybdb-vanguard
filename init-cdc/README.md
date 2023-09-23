@@ -5,13 +5,14 @@ Run the following from `connector-config` shell
 ### create cdc stream at the source
 
 ```
-yb-admin -master_addresses 127.0.0.2:7100 create_cdc_stream ysql.yugabyte
+yb-admin -master_addresses 127.0.0.1:7100 create_change_data_stream ysql.yugabyte
 
 ```
 
 ### create ybdb source connector
 
 ```
+export STREAM_ID=$(yb-admin -master_addresses 127.0.0.1:7100 list_change_data_streams | grep stream_id | awk '{print $2}' | sed s/\"//g)
 curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d '{
   "name": "ybsource",
   "config": {
