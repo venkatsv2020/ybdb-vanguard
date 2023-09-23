@@ -12,9 +12,9 @@ tasks:
     env:
       ART_PATH: init-voyager
     init: |
-      docker compose -f ${ART_PATH/compose.yml pull
+      docker compose -f ${ART_PATH}/compose.yml pull
     command: |
-      docker compose -f ${ART_PATH/compose.yml up
+      docker compose -f ${ART_PATH}/compose.yml up
 
   - name: mysql
     env:

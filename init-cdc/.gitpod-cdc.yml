@@ -37,14 +37,15 @@ tasks:
     command: |
       gp sync-await init-connect-hub
       ${CONFLUENT_HOME}/bin/confluent local services start
+      gp sync-done kafka-run
   - name: init-postgres
     env:
       PG_VERSION: 13.3
       DATA_PATH: init-cdc
     init: |
-      docker compose -f ${DATA_PATH/compose.yml pull
+      docker compose -f ${DATA_PATH}/compose.yml pull
     command: |
-      docker compose -f ${DATA_PATH/compose.yml up
+      docker compose -f ${DATA_PATH}/compose.yml up
   - name: ysqlsh
     env:
       DATA_PATH: init-cdc
@@ -58,6 +59,7 @@ tasks:
     before:
       export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/kafka
     command: |
+      gp sync-await kafka-run
       echo "Apply connector config in this shell!"
 
 vscode:
