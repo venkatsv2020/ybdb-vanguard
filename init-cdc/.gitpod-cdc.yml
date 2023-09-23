@@ -3,18 +3,18 @@ image:
 tasks:
   - name: init-kafka
     env:
-      CONFLUENT_HOME: ${GITPOD_REPO_ROOT}/kafka/
+      CONFLUENT_HOME: $(echo ${GITPOD_REPO_ROOT}/kafka/)
       KAFKA_VERSION: 7.5.0
     init: |
       mkdir -p ${GITPOD_REPO_ROOT}/kafka/
-      curl -O https://packages.confluent.io/archive/7.5/confluent-${KAFKA_VERSION}.zip
+      curl -O https://packages.confluent.io/archive/7.5/confluent-${KAFKA_VERSION}.tar.gz
       tar -xzf confluent-${KAFKA_VERSION}.tar.gz -C ${CONFLUENT_HOME} --strip-components=1
-      ln -s ${CONFLUENT_HOME}/bin/confluent /usr/local/bin/confluent
-      ln -s ${CONFLUENT_HOME}/bin/confluent-hub /usr/local/bin/confluent-hub
+      sudo ln -s ${CONFLUENT_HOME}/bin/confluent /usr/local/bin/confluent
+      sudo ln -s ${CONFLUENT_HOME}/bin/confluent-hub /usr/local/bin/confluent-hub
       gp sync-done init-kafka
   - name: init-connect-hub
     env:
-      CONFLUENT_HOME: ${GITPOD_REPO_ROOT}/kafka/
+      CONFLUENT_HOME: $(echo ${GITPOD_REPO_ROOT}/kafka/)
       JDBC_VERSION: 10.7.4
       POSTGRES_VERSION: 2.2.1
     command: |
@@ -25,13 +25,13 @@ tasks:
       gp sync-done init-connect-hub
   - name: kafka-run
     env:
-      CONFLUENT_HOME: ${GITPOD_REPO_ROOT}/kafka/
+      CONFLUENT_HOME: $(echo ${GITPOD_REPO_ROOT}/kafka/)
     command: |
       gp sync-await init-connect-hub
       confluent local services start
   - name: connector-config
     env:
-      CONFLUENT_HOME: ${GITPOD_REPO_ROOT}/kafka/
+      CONFLUENT_HOME: $(echo ${GITPOD_REPO_ROOT}/kafka/)
     command: |
       echo "Apply connector config in this shell!"
   - name: init-postgres
