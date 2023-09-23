@@ -13,36 +13,30 @@ tasks:
     before:
       export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/confluent
     init: |
-      # mkdir -p ${GITPOD_REPO_ROOT}/confluent/
-      # curl -O https://packages.confluent.io/archive/7.5/confluent-${KAFKA_VERSION}.tar.gz
-      # tar -xzf confluent-${KAFKA_VERSION}.tar.gz -C ${CONFLUENT_HOME} --strip-components=1
-      wget -qO - https://packages.confluent.io/deb/7.5/archive.key | sudo apt-key add -
-      sudo add-apt-repository "deb [arch=amd64] https://packages.confluent.io/deb/7.5 stable main"
-      sudo add-apt-repository "deb https://packages.confluent.io/clients/deb $(lsb_release -cs) main"
-      sudo apt-get update && sudo apt-get install confluent-platform
+      mkdir -p ${GITPOD_REPO_ROOT}/confluent/
+      curl -O https://packages.confluent.io/archive/7.5/confluent-${KAFKA_VERSION}.tar.gz
+      tar -xzf confluent-${KAFKA_VERSION}.tar.gz -C ${CONFLUENT_HOME} --strip-components=1
+      gp sync-done init-kafka
+  - name: init-connect-hub
+    env:
+      JDBC_VERSION: 10.7.4
+      POSTGRES_VERSION: 2.2.1
+    before:
+      export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/confluent/
+      export PATH=$PATH:${CONFLUENT_HOME}/bin
+    init: |
+      gp sync-await init-kafka
       mkdir -p ${CONFLUENT_HOME}/share/confluent-hub-components
       # ${CONFLUENT_HOME}/bin/confluent-hub install --no-prompt --component-dir ${CONFLUENT_HOME}/share/confluent-hub-components confluentinc/kafka-connect-jdbc:${JDBC_VERSION}
-      ${CONFLUENT_HOME}/bin/confluent-hub install --no-prompt --component-dir ${CONFLUENT_HOME}/share/confluent-hub-components debezium/debezium-connector-postgresql:${POSTGRES_VERSION}
-      curl -o ${CONFLUENT_HOME}/share/java/kafka/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar https://github.com/yugabyte/debezium-connector-yugabytedb/releases/download/v1.9.5.y.33.SNAPSHOT/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar
-      gp sync-done init-kafka
-  # - name: init-connect-hub
-  #   env:
-  #     JDBC_VERSION: 10.7.4
-  #     POSTGRES_VERSION: 2.2.1
-  #   # before:
-  #   #   export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/confluent
-  #   init: |
-  #     gp sync-await init-kafka
-  #     mkdir -p ${CONFLUENT_HOME}/share/confluent-hub-components
-  #     # ${CONFLUENT_HOME}/bin/confluent-hub install --no-prompt --component-dir ${CONFLUENT_HOME}/share/confluent-hub-components confluentinc/kafka-connect-jdbc:${JDBC_VERSION}
-  #     ${CONFLUENT_HOME}/bin/confluent-hub install --no-prompt --component-dir ${CONFLUENT_HOME}/share/confluent-hub-components debezium/debezium-connector-postgresql:${POSTGRES_VERSION}
-  #     curl -o ${CONFLUENT_HOME}/share/java/kafka/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar https://github.com/yugabyte/debezium-connector-yugabytedb/releases/download/v1.9.5.y.33.SNAPSHOT/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar
-  #     gp sync-done init-connect-hub
+      confluent-hub install --no-prompt --component-dir ${CONFLUENT_HOME}/share/confluent-hub-components debezium/debezium-connector-postgresql:${POSTGRES_VERSION}
+      curl -o ${CONFLUENT_HOME}/share/java/confluent-hub-client/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar https://github.com/yugabyte/debezium-connector-yugabytedb/releases/download/v1.9.5.y.33.SNAPSHOT/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar
+      gp sync-done init-connect-hub
   - name: kafka-run
     before:
       export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/confluent
+      export PATH=$PATH:${CONFLUENT_HOME}/bin
     command: |
-      gp sync-await init-kafka
+      gp sync-await init-connect-hub
       confluent local services start
       gp sync-done kafka-run
   - name: init-postgres
@@ -83,6 +77,7 @@ tasks:
       TOPIC_PREFIX: sample
     before:
       export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/confluent
+      export PATH=$PATH:${CONFLUENT_HOME}/bin
     command: |
       gp sync-await kafka-run
       echo "Apply connector config in this shell!"
