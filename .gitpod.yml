@@ -26,10 +26,9 @@ tasks:
     init: |
       gp sync-await init-kafka
       mkdir -p ${CONFLUENT_HOME}/share/confluent-hub-components
-      mkdir -p ${CONFLUENT_HOME}/share/confluent-hub-components/kafka-connect-jdbc/lib
       ${CONFLUENT_HOME}/bin/confluent-hub install --no-prompt --component-dir ${CONFLUENT_HOME}/share/confluent-hub-components confluentinc/kafka-connect-jdbc:${JDBC_VERSION}
       ${CONFLUENT_HOME}/bin/confluent-hub install --no-prompt --component-dir ${CONFLUENT_HOME}/share/confluent-hub-components debezium/debezium-connector-postgresql:${POSTGRES_VERSION}
-      curl -o ${CONFLUENT_HOME}/share/confluent-hub-components/kafka-connect-jdbc/lib/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar https://github.com/yugabyte/debezium-connector-yugabytedb/releases/download/v1.9.5.y.33.SNAPSHOT/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar
+      curl -o ${CONFLUENT_HOME}/share/java/confluent-hub-client/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar https://github.com/yugabyte/debezium-connector-yugabytedb/releases/download/v1.9.5.y.33.SNAPSHOT/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar
       gp sync-done init-connect-hub
   - name: kafka-run
     before:
@@ -47,15 +46,15 @@ tasks:
       docker compose -f ${DATA_PATH}/compose.yml up
   - name: psqlsh
     env:
-      SRC_USER: postgres
-      SRC_SECRET: 'Alwaysb3kind'
-      INSTANCE: 127.0.0.1
+      PGUSER: postgres
+      PGPASSWORD: 'Alwaysb3kind'
+      PGHOST: 127.0.0.1
     init: |
       sudo apt-get update
       sudo apt-get install -y postgresql-contrib
     command: |
       gp ports await 5432
-      psql -h ${INSTANCE} -u ${SRC_USER} -p${SRC_SECRET}
+      psql
   - name: ysqlsh
     env:
       DATA_PATH: init-cdc
@@ -66,6 +65,12 @@ tasks:
       gp ports await 5433 && sleep 2
       ysqlsh
   - name: connector-config
+    env:
+      SRC_USER: yugabyte
+      SRC_SECRET: yugabyte
+      TAR_USER: postgres
+      TAR_SECRET: 'Alwaysb3kind'
+      INSTANCE: 127.0.0.1
     before:
       export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/kafka
     command: |

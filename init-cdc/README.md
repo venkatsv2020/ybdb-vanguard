@@ -13,6 +13,7 @@ yb-admin -master_addresses 127.0.0.1:7100 create_change_data_stream ysql.yugabyt
 
 ```
 export STREAM_ID=$(yb-admin -master_addresses 127.0.0.1:7100 list_change_data_streams | grep stream_id | awk '{print $2}' | sed s/\"//g)
+
 curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d '{
   "name": "ybsource",
   "config": {
