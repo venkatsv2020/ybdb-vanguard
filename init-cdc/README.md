@@ -51,7 +51,7 @@ curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" 
       "tasks.max": "1",
       "topics": "'${TOPIC_PREFIX}'_all_events",
       "dialect.name": "PostgreSqlDatabaseDialect",
-      "connection.url": "jdbc:postgresql://localhost:5432/postgres?user=postgres&password=Alwaysb3kind",
+      "connection.url": "jdbc:postgresql://localhost:5432/postgres?user='${TAR_USER}'&password='${TAR_SECRET}'",
       "auto.create": "true",
       "auto.evolve":"true",
       "insert.mode": "upsert",

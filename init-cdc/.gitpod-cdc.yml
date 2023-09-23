@@ -11,9 +11,9 @@ tasks:
     env:
       KAFKA_VERSION: 7.5.0
     before:
-      export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/kafka
+      export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/confluent
     init: |
-      mkdir -p ${GITPOD_REPO_ROOT}/kafka/
+      mkdir -p ${GITPOD_REPO_ROOT}/confluent/
       curl -O https://packages.confluent.io/archive/7.5/confluent-${KAFKA_VERSION}.tar.gz
       tar -xzf confluent-${KAFKA_VERSION}.tar.gz -C ${CONFLUENT_HOME} --strip-components=1
       gp sync-done init-kafka
@@ -22,17 +22,17 @@ tasks:
       JDBC_VERSION: 10.7.4
       POSTGRES_VERSION: 2.2.1
     before:
-      export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/kafka
+      export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/confluent
     init: |
       gp sync-await init-kafka
       mkdir -p ${CONFLUENT_HOME}/share/confluent-hub-components
-      ${CONFLUENT_HOME}/bin/confluent-hub install --no-prompt --component-dir ${CONFLUENT_HOME}/share/confluent-hub-components confluentinc/kafka-connect-jdbc:${JDBC_VERSION}
+      # ${CONFLUENT_HOME}/bin/confluent-hub install --no-prompt --component-dir ${CONFLUENT_HOME}/share/confluent-hub-components confluentinc/kafka-connect-jdbc:${JDBC_VERSION}
       ${CONFLUENT_HOME}/bin/confluent-hub install --no-prompt --component-dir ${CONFLUENT_HOME}/share/confluent-hub-components debezium/debezium-connector-postgresql:${POSTGRES_VERSION}
-      curl -o ${CONFLUENT_HOME}/share/java/confluent-hub-client/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar https://github.com/yugabyte/debezium-connector-yugabytedb/releases/download/v1.9.5.y.33.SNAPSHOT/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar
+      curl -o ${CONFLUENT_HOME}/share/java/kafka/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar https://github.com/yugabyte/debezium-connector-yugabytedb/releases/download/v1.9.5.y.33.SNAPSHOT/debezium-connector-yugabytedb-1.9.5.y.33.SNAPSHOT.jar
       gp sync-done init-connect-hub
   - name: kafka-run
     before:
-      export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/kafka
+      export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/confluent
     command: |
       gp sync-await init-connect-hub
       ${CONFLUENT_HOME}/bin/confluent local services start
@@ -74,7 +74,7 @@ tasks:
       MASTERS: 127.0.0.1:7100
       TOPIC_PREFIX: sample
     before:
-      export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/kafka
+      export CONFLUENT_HOME=${GITPOD_REPO_ROOT}/confluent
     command: |
       gp sync-await kafka-run
       echo "Apply connector config in this shell!"
