@@ -19,7 +19,7 @@ curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" 
   "config": {
     "tasks.max":"1",
     "connector.class": "io.debezium.connector.yugabytedb.YugabyteDBConnector",
-    "topics_regex": "${TOPIC_PREFIX}.public.(.*)",
+    "topics_regex": "'${TOPIC_PREFIX}'.public.(.*)",
     "database.hostname":"'$NODE'",
     "database.master.addresses":"'$MASTERS'",
     "database.port":"5433",
@@ -35,7 +35,7 @@ curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" 
     "transforms.Reroute.type":"io.debezium.transforms.ByLogicalTableRouter",
     "transforms.Reroute.topic.regex":"(.*)",
     "transforms.Reroute.topic.replacement":"'${TOPIC_PREFIX}'_all_events",
-    "transforms.Reroute.key.field.regex":"ybsource.public.(.*)",
+    "transforms.Reroute.key.field.regex":"'${TOPIC_PREFIX}'.public.(.*)",
     "transforms.Reroute.key.field.replacement":"'\$1'"
   }
 }'
