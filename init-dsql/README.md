@@ -1,4 +1,4 @@
-## ybdb explore the distributed sql universe
+## Into the distributed sql and postgres++ universe
 
 Run the following from `ysqlsh` shell
 
@@ -32,6 +32,8 @@ create table sample_03(k int, v int, t text, f float, d date, ts timestamp, b bo
 ```
 
 ### Xperience the power of YCQL
+
+Run the following from `ycqlsh` shell
 
 ```
 create keyspace demo;

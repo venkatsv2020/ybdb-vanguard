@@ -1,4 +1,4 @@
-## ybdb explore the distributed sql universe
+## Change data capture(CDC) workflow from ybdb to postgres
 
 Run the following from `connector-config` shell
 

@@ -1,4 +1,4 @@
-## query tuning tips and tricks
+## Query tuning tips and tricks
 
 ### explain plan
 ```
@@ -129,7 +129,7 @@ from emp_evaluation_period e1
 where (e1.hiredate, e1.evaluation_end) overlaps (e2.hiredate, e2.evaluation_end);
 ```
 
-### recurssive cte
+### recursive cte
 ```sql
 with recursive emp_manager as (
   select empno,

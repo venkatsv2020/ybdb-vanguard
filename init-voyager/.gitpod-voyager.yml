@@ -32,6 +32,7 @@ tasks:
     env:
       INSTANCE: 127.0.0.1
       DATA_PATH: voyager-data
+      SCHEMA: public
       SRC_DB_TYPE: mysql
       SRC_DB_ID: 'Chinook'
       SRC_USER: root

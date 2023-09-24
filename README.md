@@ -20,10 +20,10 @@ This will explore the java microservices like spring boot, quarkus, and micronau
 [testcontainers:](https://github.com/srinivasa-vasu/ybdb-boot-data)
 This will explore the java testcontainers integration with yugabytedb.
 
-## Voyager workflow from mysql to ybdb
+## Data migration workflow from mysql to ybdb
 [voyager:](init-voyager/README.md)
 This will explore the voyager tool to migrate mysql to yugabytedb.
 
-## CDC workflow from ybdb to postgres
+## Change data capture(CDC) workflow from ybdb to postgres
 [cdc:](init-cdc/README.md)
 This will explore yugabytedb's change data capture.
