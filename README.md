@@ -1,10 +1,10 @@
 # ybdb-vanguard
 
-## Into the distributed sql universe
+## Into the distributed sql and postgres++ universe
 [distributed sql:](init-dsql/README.md)
 This will help you get started with yugabyte db and explore the distributed sql universe.
 
-## query tuning tips and tricks
+## Query tuning tips and tricks
 [sql universe:](init-qt/README.md)
 This will help you get started with query tuning and have a better understanding of the distributed sql universe.
 
