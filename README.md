@@ -1,9 +1,29 @@
 # ybdb-vanguard
 
-- [ybdb :: into the distributed sql universe](init-dsql/README.md)
-- [ybdb :: query tuning: tips and tricks](init-qt/README.md)
-- [ybdb :: development innerloop workflow](init-iloop/README.md)
-- [ybdb :: java microservices](https://github.com/srinivasa-vasu/yb-ms-data)
-- [ybdb :: java testcontainers](https://github.com/srinivasa-vasu/ybdb-boot-data)
-- [ybdb :: voyager: mysql to ybdb](init-voyager/README.md)
-- [ybdb :: cdc: ybdb to postgres](init-cdc/README.md)
+## Into the distributed sql universe
+[distributed sql:](init-dsql/README.md)
+This will help you get started with yugabyte db and explore the distributed sql universe.
+
+## query tuning tips and tricks
+[sql universe:](init-qt/README.md)
+This will help you get started with query tuning and have a better understanding of the distributed sql universe.
+
+## Development innerloop workflow
+[inner loop:](init-iloop/README.md)
+This will explore the development innerloop workflow and guide bulding an application from scratch. This provides a hands-on experience of interacting with yugabyte db.
+
+## Java microservices
+[java microservices:](https://github.com/srinivasa-vasu/yb-ms-data)
+This will explore the java microservices like spring boot, quarkus, and micronaut integration with yugabytedb.
+
+## Java testcontainers
+[testcontainers:](https://github.com/srinivasa-vasu/ybdb-boot-data)
+This will explore the java testcontainers integration with yugabytedb.
+
+## Voyager workflow from mysql to ybdb
+[voyager:](init-voyager/README.md)
+This will explore the voyager tool to migrate mysql to yugabytedb.
+
+## CDC workflow from ybdb to postgres
+[cdc:](init-cdc/README.md)
+This will explore yugabytedb's change data capture.
