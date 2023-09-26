@@ -29,7 +29,7 @@ This will help you get started with query tuning and have a better understanding
 ```bash
 cp init-qt/.gitpod-qt.yml .gitpod.yml
 git add .gitpod.yml
-git commit -m "dsql base"
+git commit -m "qt base"
 git push origin main
 
 ```
@@ -41,7 +41,7 @@ This will explore the development innerloop workflow and guide bulding an applic
 ```bash
 cp init-iloop/.gitpod-iloop.yml .gitpod.yml
 git add .gitpod.yml
-git commit -m "dsql base"
+git commit -m "il base"
 git push origin main
 
 ```
@@ -61,7 +61,7 @@ This will explore the voyager tool to migrate mysql to yugabytedb.
 ```bash
 cp init-voyager/.gitpod-voyager.yml .gitpod.yml
 git add .gitpod.yml
-git commit -m "dsql base"
+git commit -m "voyager base"
 git push origin main
 
 ```
@@ -73,7 +73,7 @@ This will explore yugabytedb's change data capture.
 ```bash
 cp init-cdc/.gitpod-cdc.yml .gitpod.yml
 git add .gitpod.yml
-git commit -m "dsql base"
+git commit -m "cdc base"
 git push origin main
 
 ```
