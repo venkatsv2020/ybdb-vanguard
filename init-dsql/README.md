@@ -9,7 +9,7 @@ create table sample(k int primary key, v int, t text, f float, d date, ts timest
 
 \d+ sample;
 
-insert into sample values(1, 1, 'one', 1.1, '2020-01-01', '2020-01-01 01:01:01', true, '2020-01-01 01:01:01', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', '{"a": 1}');
+insert into sample values(1, 1, 'one', 1.1, '2020-01-01', '2020-01-01 01:01:01', '2020-01-01 01:01:01', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', '{"a": 1}');
 
 create index on sample(v);
 
