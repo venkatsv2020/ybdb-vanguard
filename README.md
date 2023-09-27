@@ -3,7 +3,7 @@
 ## Pre-requisites
 - github.com account
 - gitpod.io account
-- git cli
+- git cli (https://github.com/git-guides/install-git)
 
 ## Setup
 - Fork this repo
